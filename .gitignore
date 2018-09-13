@@ -1,0 +1,6 @@
+*.pyc
+.DS_Store
+env/
+tmp/
+.idea/
+set_env.bash
