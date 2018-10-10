@@ -17,3 +17,5 @@ You will need to set up CI/CD variables in Gitlab minimally for these:
 
 The script also automatically passes CI_REGISTRY_IMAGE and CI_COMMIT_REF_NAME to the deploy environment
 to be accessed by the docker-compose script.
+
+All application specific environment variables (secrets such as API keys) should be set up as CI/CD variables with the **APP_** prefix. These variables will be automatically passed to the deployed enviroment by the fabric script.
