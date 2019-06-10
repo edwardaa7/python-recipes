@@ -1,6 +1,7 @@
 import os
 import time
-from fabric.api import require, env, sudo, put, get
+import random
+from fabric.api import require, env, sudo, put, get, local
 from fabric.context_managers import cd, settings, shell_env, quiet
 from fabric.contrib import files
 
@@ -40,9 +41,24 @@ def setup_ufw():
     sudo('ufw allow 443')
     sudo('ufw enable')
 
+def setup_ssh():
+    random_port = random.randint(10000, 20000)
+    local(f'echo Setting up SSH on port {random_port}')
+
+    sudo(f'ufw allow {random_port}')
+
+    ssh_config_base_path = '/etc/ssh'
+    with cd(ssh_config_base_path):
+        sudo('cp sshd_config sshd_config.bak')
+        sudo('grep -v "Port 22" sshd_config > sshd_config.tmp')
+        sudo(f'echo "Port {random_port}" >> sshd_config.tmp')
+        sudo('cp sshd_config.tmp sshd_config')
+        sudo('service sshd restart')
+
 def setup():
     upgrade()
     setup_docker()
     setup_docker_compose()
     setup_swap()
     setup_ufw()
+    setup_ssh()
